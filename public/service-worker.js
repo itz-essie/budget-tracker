@@ -6,12 +6,14 @@ const FILES_TO_CACHE = [
     "/icons/icon-192x192.png",
     "/icons/icon-512x512.png",
     "/manifest.webmanifest",
+    //"/indexedDb.js"
 ]
 
 const CACHE_NAME = "static-cache-v2";
 const DATA_CACHE_NAME = "data-cache-v1";
 
 // install
+//self is the window in the console
 self.addEventListener("install", function(evt) {
   evt.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
@@ -19,13 +21,13 @@ self.addEventListener("install", function(evt) {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
-
+// skip waiting- forces the waiting service worker to become the active service worker
   self.skipWaiting();
 });
 
 self.addEventListener("activate", function(evt) {
   evt.waitUntil(
-    caches.keys().then(keyList => {
+    caches.keys().then(keyList => { // may close parenthesis after keyList, check if code works
       return Promise.all(
         keyList.map(key => {
           if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
@@ -57,7 +59,7 @@ self.addEventListener("fetch", function(evt) {
           })
           .catch(err => {
             // Network request failed, try to get it from the cache.
-            return cache.match(evt.request);
+            return cache.match(evt.request); // looks through cache object for the match of the request
           });
       }).catch(err => console.log(err))
     );
@@ -69,7 +71,7 @@ self.addEventListener("fetch", function(evt) {
   // see https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook#cache-falling-back-to-network
   evt.respondWith(
     caches.match(evt.request).then(function(response) {
-      return response || fetch(evt.request);
+      return response || fetch(evt.request); // return what was requested or go fetch it
     })
   );
 });
