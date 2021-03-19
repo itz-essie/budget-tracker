@@ -51,7 +51,7 @@ function populateTable() {
 
 function populateChart() {
   // copy array and reverse it
-  let reversed = transactions.slice().reverse();
+  let reversed = transactions.slice().reverse();//why are we using slice here?
   let sum = 0;
 
   // create date labels for chart
@@ -110,7 +110,7 @@ function sendTransaction(isAdding) {
 
   // if subtracting funds, convert amount to negative number
   if (!isAdding) {
-    transaction.value *= -1;
+    transaction.value *= -1; //any num multipled by -1 is the same number but with a negative sign in front of it
   }
 
   // add to beginning of current array of data
