@@ -1,6 +1,7 @@
 let transactions = [];
 let myChart;
 
+// add code in order to recognize or call on created service worker file, to use be able to use it
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("service-worker.js").then(reg => {
@@ -114,6 +115,7 @@ function sendTransaction(isAdding) {
 
   // add to beginning of current array of data
   transactions.unshift(transaction);
+  //unshift puts something at very beginning of array, shift will remove the first item of array, push will add item to end of array, pop will remove the last item of the array 
 
   // re-run logic to populate ui with new record
   populateChart();
@@ -129,10 +131,10 @@ function sendTransaction(isAdding) {
       "Content-Type": "application/json"
     }
   })
-  .then(response => {    
-    return response.json();
+  .then(response => {     //.then will only run of we get a non error response from the api call
+    return response.json(); //.json is necessary when using fetch, not for an ajax call
   })
-  .then(data => {
+  .then(data => { //.then will only run of we get a non error response from the api call. if .then runs, .catch won't run
     if (data.errors) {
       errorEl.textContent = "Missing Information";
     }
@@ -142,7 +144,7 @@ function sendTransaction(isAdding) {
       amountEl.value = "";
     }
   })
-  .catch(err => {
+  .catch(err => { // if we get anything in the 400 or 500 series response code, or request fails to be sent out, .catch will run-- catches error
     // fetch failed, so save in indexed db
     saveRecord(transaction);
 
